@@ -1,6 +1,8 @@
 <?php
    // code with validation will be here and saving user will be here
-   include 'uploads.php';
+    require 'db.php';
+	require 'uploads.php';
+
    
        function isError() {
         if(empty($_POST["name"]) || empty($_POST["email"]) || empty(@$_POST["gender"])) {
@@ -9,28 +11,28 @@
         }
         return false;
     }
-	 function addData() {
+ function addData( $con) {
 
         if (!file_exists('database/users.csv')) {
             file_put_contents('database/users.csv', '');
         }
-         
-	    $name = $_POST["name"];
+            
+        $name = $_POST["name"];
         $email = $_POST["email"];
         $gender = @$_POST["gender"];
-		if(isset($_FILES['photo'])){
+        if(isset($_FILES['photo'])){
 		$file = $_FILES['photo'];
 		$path = $file['name'];
 		}
-		
-		
-
-		$fp = fopen('database/users.csv', 'a');
-		fwrite($fp, "$name,$email,$gender,$path \n");
-		fclose($fp);
-
+        $sql = "INSERT INTO users (email, name, gender, password, path_to_img) VALUES ('$email', '$name','$gender', '11111', '$path')";
+        echo $sql;
+        $res = mysqli_query($con, $sql);
+        if ($res) {
+           $valid = true;
+        }
 
     }
+
 	
 ?>
 <!doctype html>
@@ -56,14 +58,14 @@
         echo "User Added: " . $_POST["name"] . "<br>";
         echo "Email: " . $_POST["email"]. "<br>";
         echo "Gender: " . @$_POST["gender"] . "<br>";
-		
-		addData();
     }
+    addData( $conn);
    
    ?> 
    <hr>
-   <a class="btn" href="adduser.php">return back</a>
+   <a class="btn" href="adduser.php">add another user</a>
    <a class="btn" href="table.php">view list</a>
+     <a class="btn" href="logout.php">log out</a>
 </div>
 </body>
 </html>

@@ -1,18 +1,13 @@
 <?php
-
 session_start();
 
 $isRestricted = false;
-
 if (isset($_SESSION['auth']) && $_SESSION['auth'] === true) {
-   $isRestricted = true;
-}
-
-?>
+$isRestricted = true;
+}?>
 <!doctype html>
 <html lang="en">
 <head>
-
    <meta charset="UTF-8">
    <meta name="viewport"
          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -29,8 +24,10 @@ if (isset($_SESSION['auth']) && $_SESSION['auth'] === true) {
 </head>
 <body>
 <div class="container">
+   <?php if($isRestricted):?>
+
    <h3>Add New User</h3>
-   <form action="handler.php" method="post" enctype="multipart/form-data" >
+ <form action="handler.php" method="post" enctype="multipart/form-data" >
        <div class="row">
            <div class="field">
                <label>Name: <input type="text" name="name"></label>
@@ -62,13 +59,20 @@ if (isset($_SESSION['auth']) && $_SESSION['auth'] === true) {
                     <input name="photo" type="file" accept="image/png, image/gif, image/jpeg, image/jpg">
                 </div>
                 <div class="file-path-wrapper">
-                    <input class="file-path validate" type="text" name ="photoPath">
+                    <input class="file-path validate" type="text" name ="filePath">
                 </div>
 
            </div>
        </div>
        <input type="submit" class="btn" value="Add">
    </form>
+   
+   <?php else:?>
+       <span>
+           Content is restricted, please <a href="login.php">Login</a>
+       </span>
+   <?php endif;?>
+   <a class="btn" href="logout.php">log out</a>
 </div>
 </body>
 </html>

@@ -1,20 +1,29 @@
 <?php
 
+require 'db.php';
+$sql = "SELECT * FROM users";
+$result = $conn->query($sql);
+
+
 $fp = fopen('database/users.csv', 'a');
 		
 $data = file_get_contents('database/users.csv');		
 
 $user[] = explode(" ",$data);
 
+if ($result->num_rows > 0) {
+   // output data of each row
+   while($row = $result->fetch_assoc()) {
+       $users[] = [
+           'name' => $row['name'],
+           'email' => $row['email'],
+           'gender' => $row['gender'],
+           'path' => !empty($row['path_to_img'])?'public/images/' . $row['path_to_img']:'public/images/test.jpg'
+       ];
+   }
+}
 
- for($i = 0; $i < count($user[0]); $i++) {
-      $users[] = [
-	'name' => explode(",",$user[0][$i])[0],
-	'email' => explode(",",$user[0][$i])[1],
-	'gender' => explode(",",$user[0][$i])[2],
-	'path'=> !empty(explode(",",$user[0][$i])[3])?"public/images/" . explode(",",$user[0][$i])[3]:'public/images/test.jpg'
-];
-    }
+
 
 
 	fclose($fp);
@@ -46,7 +55,8 @@ $user[] = explode(" ",$data);
 	
 	
     ?> 
- <a class="btn" href="adduser.php">return back</a>
+ <a class="btn" href="adduser.php">add another user</a>
+  <a class="btn" href="logout.php">log out</a>
 </div>
 </body>
 </html>
